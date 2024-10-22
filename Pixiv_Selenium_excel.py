@@ -6,6 +6,13 @@ import os
 import time
 import re
 
+def get_unique_filename(base_path, base_name, extension):
+    counter = 1
+    new_name = f"{base_name}{extension}"
+    while os.path.exists(os.path.join(base_path, new_name)):
+        new_name = f"{base_name}_{counter}{extension}"
+        counter += 1
+    return new_name
 # 設置無痕模式
 chrome_options = Options()
 chrome_options.add_argument("referer=https://www.pixiv.net/tags")
@@ -59,12 +66,10 @@ for i in range(len(image_elements)):
     if image_url and ("jpg" in image_url or "png" in image_url):
         img_data = requests.get(image_url, headers=headers).content
         valid_filename = re.sub(r'[<>:"/\\|?*]', '', title[i].text)  # 使用正則表達式替換無效字符
-        filename = f'images/{valid_filename}.jpg'
+        filename = f'images/{valid_filename}_{count}.jpg'
+        count+=1
         with open(filename, 'wb') as handler:
             handler.write(img_data)
-        print(f"Downloaded image {i}: {image_url}")
-    else:
-        print(f"Invalid URL for image {i}")
 
 # 關閉瀏覽器
 driver.quit()
