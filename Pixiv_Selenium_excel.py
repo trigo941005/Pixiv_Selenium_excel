@@ -27,6 +27,8 @@ chrome_options = Options()
 driver = webdriver.Chrome()
 
 excel_title()
+
+
 #設置reforer和User-Agent防止被擋
 headers = {
     'Referer': 'https://www.pixiv.net/',
@@ -88,17 +90,26 @@ for i in range(len(image_elements)):
         data_list.append(author[i].text)
         #data_list.append("%s_%d.jpg"%(valid_filename,count))
         # 插入圖片
+        #imgsize = (720 / 4, 1280 / 4)
         img_path = "images/%s_%d.jpg"%(valid_filename,count)  # 圖片路徑
         wb = load_workbook(filename="Pixiv.xlsx")
         ws1 = wb["data"]
+
         if os.path.exists(img_path):  # 檢查圖片是否存在
             img = Image(img_path)
-            ws1.add_image(img, f'C{count+1}')  # 將圖片插入到指定的單元格
+            #img.width, img.height = imgsize
+            ws1.add_image(img, f'C{count+2}')  # 將圖片插入到指定的單元格
         else:
             print(f"Image not found: {img_path}")  # 如果圖片不存在，則打印提示
         wb.save("Pixiv.xlsx")
         # 將圖片插入到指定儲存格
         w2xlsx("Pixiv.xlsx",data_list)
         count+=1
+wb = load_workbook(filename="Pixiv.xlsx")
+ws1 = wb["data"]
+for row in range(1, ws1.max_row + 1):
+    ws1.row_dimensions[row].height = 250  # 設置列高
+ws1.row_dimensions[1].height = 20
 # 關閉瀏覽器
+wb.save("Pixiv.xlsx")
 driver.quit()

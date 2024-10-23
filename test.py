@@ -1,16 +1,24 @@
 from openpyxl import Workbook
-from openpyxl.drawing.image import Image
 
-# 創建 Workbook
+# 創建新的 Excel 工作簿
 wb = Workbook()
-ws = wb.active
+ws1 = wb.active
 
-# 插入圖片
-img_path = "images/『午夜の待ち合わせ』_12.jpg"  # 圖片路徑
-img = Image(img_path)
+# 調整所有行高
+for row in range(2, ws1.max_row + 1):
+    ws1.row_dimensions[row].height = 250  # 設置每一行的高度
 
-# 將圖片插入到指定儲存格
-ws.add_image(img, 'C1')
+# 調整所有列寬
+for col in ws1.columns:
+    max_length = 0
+    col_letter = col[0].column_letter  # 獲取列字母
+    for cell in col:
+        try:
+            if len(str(cell.value)) > max_length:
+                max_length = len(cell.value)
+        except:
+            pass
+    adjusted_width = (max_length + 2) * 1.2  # 可依據具體需求調整
+    ws1.column_dimensions[col_letter].width = adjusted_width
 
-# 儲存 Excel 檔案
-wb.save("output_with_images.xlsx")
+wb.save("Pixiv_resized.xlsx")
