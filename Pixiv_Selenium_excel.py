@@ -96,6 +96,7 @@ for i in range(len(image_elements)):
             ws1.add_image(img, f'C{count+1}')  # 將圖片插入到指定的單元格
         else:
             print(f"Image not found: {img_path}")  # 如果圖片不存在，則打印提示
+        wb.save("Pixiv.xlsx")
         # 將圖片插入到指定儲存格
         w2xlsx("Pixiv.xlsx",data_list)
         count+=1
